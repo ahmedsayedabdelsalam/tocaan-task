@@ -1,61 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Order & Payment Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based RESTful API for managing orders and payments, designed for extensibility and clean code. Easily add new payment gateways using the strategy pattern.
 
-## About Laravel
+## 🚀 Setup Instructions
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. **Clone the repository**
+   ```bash
+   git clone git@github.com:ahmedsayedabdelsalam/tocaan-task.git
+   cd tocaan-task
+   ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   # Edit .env for JWT, and payment gateway configs
+   php artisan key:generate
+   php artisan jwt:secret
+   ```
 
-## Learning Laravel
+4. **Database**
+   ```bash
+   php artisan migrate
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+5. **Run the application**
+   - With Laravel Herd:  
+     Visit [http://tocaan-task.test](http://tocaan-task.test)
+   - Or use `php artisan serve`
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+6. **Run tests**
+   ```bash
+   php artisan test
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🧩 Payment Gateway Extensibility
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Payment gateways use the **Strategy Pattern**.
+- To add a new gateway:
+  1. Create a new class in `app/Services/Payments/Gateways/` implementing `PaymentGateway`.
+  2. Register the gateway in `config/payments.php`.
+  3. Add any required config to `.env` and reference it in `config/payments.php`.
+  4. That's it! The system will route payments to the new gateway based on the `method` field.
 
-### Premium Partners
+**Example:**
+```php
+// config/payments.php
+return [
+    'gateways' => [
+        'credit_card' => \App\Services\Payments\Gateways\CreditCardGateway::class,
+        'paypal' => \App\Services\Payments\Gateways\PaypalGateway::class,
+        // Add new gateway here
+        'stripe' => \App\Services\Payments\Gateways\StripeGateway::class,
+    ],
+];
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 🔐 Authentication
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- All order and payment endpoints require JWT authentication.
+- Register and login to receive a token.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📚 API Documentation
 
-## Security Vulnerabilities
+- Import the provided Postman collection: `https://lively-rocket-295541.postman.co/workspace/My-Workspace~225c839a-5a96-4c16-8c25-7640721d1497/collection/9379426-20e5a5d6-2158-4200-b200-ce969a42f102?action=share&creator=9379426&active-environment=9379426-1bd267df-6cca-41c4-a118-de2f1daecc09`
+- Endpoints are grouped by:
+  - **Auth**: Register, Login, Logout, Me
+  - **Orders**: CRUD, filter by status, pagination
+  - **Payments**: Process, list, view by order
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🧪 Testing
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Run all tests: `php artisan test`
+- Feature tests cover:
+  - Order creation, update, delete (with business rules)
+  - Payment processing (all gateways, business rules)
+  - Authentication flows
+- Unit tests cover:
+  - Order total calculation
+
+---
+
+## 📝 Notes & Assumptions
+
+- Only confirmed orders can be paid.
+- Orders with payments cannot be deleted.
+- Payment gateway configs are managed via `.env` and `config/payments.php`.
+
+---
+
+## 📂 Project Structure
+
+- `app/Http/Controllers/API/` - API controllers
+- `app/Services/Payments/Gateways/` - Payment gateway strategies
+- `app/Data/` - Data transfer objects
+- `tests/Feature/API/` - Feature tests
+- `tests/Unit/` - Unit tests
+
+---
+
+## 🏁 How to Add a New Payment Gateway
+
+1. Create a new gateway class in `app/Services/Payments/Gateways/`.
+2. Implement the `PaymentGatewayInterface`.
+3. Register the gateway in `config/payments.php`.
+4. Add any required config to `.env`.
+5. Done! Payments with the new method will use your gateway.
+
+---
+
+## 🛠️ Contact & Support
+
+For questions, open an issue or contact the maintainer.
