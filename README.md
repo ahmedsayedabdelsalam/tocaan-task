@@ -73,7 +73,7 @@ return [
 
 ## 📚 API Documentation
 
-- Import the provided Postman collection: `https://lively-rocket-295541.postman.co/workspace/My-Workspace~225c839a-5a96-4c16-8c25-7640721d1497/collection/9379426-20e5a5d6-2158-4200-b200-ce969a42f102?action=share&creator=9379426&active-environment=9379426-1bd267df-6cca-41c4-a118-de2f1daecc09`
+- Import the provided Postman collection: [collection](https://www.postman.com/lively-rocket-295541/tocaan-task/collection/4aacclb/tocaan-task?action=share&creator=9379426&active-environment=9379426-1bd267df-6cca-41c4-a118-de2f1daecc09)
 - Endpoints are grouped by:
   - **Auth**: Register, Login, Logout, Me
   - **Orders**: CRUD, filter by status, pagination
